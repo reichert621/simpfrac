@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Simple Fractal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+  </head>
+  <body ng-app="app">
+    <div ng-controller="MainCtrl as ctrl" class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Search for a candidate:</h2>
+
+          <p>
+            Enter text below to filter candidate scores by candidate, company, etc.
+          </p>
+
+          <p>
+            (e.g. enter "889" to see the scores for candidate 889)
+          </p>
+
+          <input type="text" class="form-control"
+                 placeholder="Enter filter..."
+                 ng-model="ctrl.filter" />
+        </div>
+
+        <div class="col-md-8">
+          <h3>Company Information</h3>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="score-table-header">
+                  Company
+                </th>
+                <th class="score-table-header">
+                  Fractal Index
+                </th>
+                <th class="score-table-header">
+                  Fractal Range
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="company in ctrl.companies">
+                <th scope="row">{{ company.company_id }}</th>
+                <td>{{ company.fractal_index | number:3 }}</td>
+                <td>
+                  {{ (company.fractal_index - 0.15) | number:3 }} - {{ (company.fractal_index + 0.15) | number:3 }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="col-md-12">
+          <h3>Candidate Scores</h3>
+
+          <table class="table score-table">
+            <thead>
+              <tr>
+                <th class="score-table-header"
+                    ng-click="ctrl.setField('candidate_id')">
+                  Candidate
+                </th>
+                <th class="score-table-header"
+                    ng-click="ctrl.setField('company_id')">
+                  Company
+                </th>
+                <th class="score-table-header"
+                    ng-click="ctrl.setField('candidate_coding_score')">
+                  Coding Score
+                </th>
+                <th class="score-table-header"
+                    ng-click="ctrl.setField('candidate_communication_score')">
+                  Communication Score
+                </th>
+                <th class="score-table-header"
+                    ng-click="ctrl.setField('percentile_coding_score')">
+                  Coding Score Percentile
+                </th>
+                <th class="score-table-header"
+                    ng-click="ctrl.setField('percentile_communication_score')">
+                  Communication Score Percentile
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="stat in ctrl.stats | filter:ctrl.filter | orderBy:ctrl.field:ctrl.reverse">
+                <th scope="row">{{ stat.candidate_id }}</th>
+                <td>{{ stat.company_id }}</td>
+                <td>{{ stat.candidate_coding_score | number }}</td>
+                <td>{{ stat.candidate_communication_score | number }}</td>
+                <td>{{ stat.percentile_coding_score | number }}</td>
+                <td>{{ stat.percentile_communication_score | number }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js">
+    </script>
+    <script src="js/scripts.js"></script>
+  </body>
+</html>
